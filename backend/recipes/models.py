@@ -1,8 +1,8 @@
 from django.core import validators
 from django.db import models
+from users.models import User
 
 from .colors import HexColors
-from users.models import User
 
 
 class Ingredient(models.Model):
