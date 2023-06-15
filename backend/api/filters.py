@@ -7,11 +7,13 @@ from users.models import User
 
 class IngredientSearchFilter(SearchFilter):
     """Фильтр ингредиентов по имени."""
+
     search_param = 'name'
 
 
 class RecipeFilterSet(FilterSet):
     """Фильтр рецептов по тэгам и автору."""
+
     tags = filters.ModelMultipleChoiceFilter(
         field_name='tags__slug',
         to_field_name='slug',
@@ -24,12 +26,14 @@ class RecipeFilterSet(FilterSet):
 
     def filter_is_favorited(self, queryset, name, value):
         """Фильтруются избранные рецепты."""
+
         if value and not self.request.user.is_anonymous:
             return queryset.filter(favorite__user=self.request.user)
         return queryset
 
     def filter_is_in_shopping_cart(self, queryset, name, value):
         """Фильтруются рецепты в списке покупок."""
+
         if value and not self.request.user.is_anonymous:
             return queryset.filter(shopping_cart__user=self.request.user)
         return queryset

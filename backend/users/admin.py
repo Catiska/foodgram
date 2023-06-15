@@ -8,7 +8,6 @@ from .models import User, Follow
 class UserAdmin(UserAdmin):
     list_display = ('id', 'username', 'email', 'first_name', 'last_name')
     list_filter = ('username', 'email')
-    # list_editable = ('username', 'email', 'first_name', 'last_name')
 
 
 @admin.register(Follow)

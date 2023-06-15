@@ -4,7 +4,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'secret_key')
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*', 'localhost']
 
@@ -92,20 +92,6 @@ REST_FRAMEWORK = {
 
     'DEFAULT_PERMISSION_CLASSES':
     ['rest_framework.permissions.IsAuthenticatedOrReadOnly', ],
-}
-
-DJOSER = {
-    'LOGIN_FIELD': 'email',
-    'HIDE_USERS': False,
-    'SERIALIZERS': {
-        'user_create': 'users.serializers.CreateUserSerializer',
-        'user': 'users.serializers.MyUserSerializer',
-        'current_user': 'users.serializers.MyUserSerializer',
-    },
-    'PERMISSIONS': {
-        'user': ('rest_framework.permissions.IsAuthenticated',),
-        'user_list': ('rest_framework.permissions.AllowAny',)
-    }
 }
 
 LANGUAGE_CODE = 'ru'

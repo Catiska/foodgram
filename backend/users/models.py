@@ -19,6 +19,7 @@ def validate_username(data):
 
 class User(AbstractUser):
     """Кастомная модель юзера."""
+
     username = models.CharField('Ник пользователя',
                                 max_length=150,
                                 blank=False,
@@ -62,6 +63,7 @@ class User(AbstractUser):
 
 class Follow(models.Model):
     """Модель подписки на других пользователей."""
+
     author = models.ForeignKey(User,
                                on_delete=models.CASCADE,
                                related_name='following',

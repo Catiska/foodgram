@@ -7,6 +7,7 @@ from users.models import User
 
 class Ingredient(models.Model):
     """Модель ингредиента."""
+
     name = models.CharField('Ингредиент', max_length=200)
     measurement_unit = models.CharField('Единица измерения',
                                         max_length=200)
@@ -26,6 +27,7 @@ class Ingredient(models.Model):
 
 class Tag(models.Model):
     """Модель тэга."""
+
     name = models.CharField('Тэг', unique=True, max_length=200)
     color = models.CharField('Цвет Hex',
                              max_length=7,
@@ -44,6 +46,7 @@ class Tag(models.Model):
 
 class Recipe(models.Model):
     """Модель рецепта."""
+
     name = models.CharField('Рецепт', max_length=200)
     author = models.ForeignKey(User,
                                on_delete=models.CASCADE,
@@ -76,12 +79,14 @@ class Recipe(models.Model):
 
 class IngredientsAmount(models.Model):
     """Модель связи ингредиентов и рецепта."""
+
     ingredient = models.ForeignKey(Ingredient,
                                    on_delete=models.CASCADE,
                                    verbose_name='Ингредиент')
     recipe = models.ForeignKey(Recipe,
                                on_delete=models.CASCADE,
-                               verbose_name='Рецепт')
+                               verbose_name='Рецепт',
+                               related_name='recipes_ingredients')
     amount = models.PositiveSmallIntegerField(
         'Количество',
         validators=(validators.MinValueValidator(
@@ -106,6 +111,7 @@ class IngredientsAmount(models.Model):
 
 class Favorite(models.Model):
     """Модель избранных рецептов."""
+
     recipe = models.ForeignKey(Recipe,
                                on_delete=models.CASCADE,
                                verbose_name='Рецепт',
@@ -132,6 +138,7 @@ class Favorite(models.Model):
 
 class ShoppingCart(models.Model):
     """Модель списка покупок."""
+
     recipe = models.ForeignKey(Recipe,
                                on_delete=models.CASCADE,
                                verbose_name='Рецепт',

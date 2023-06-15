@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from djoser.views import UserViewSet
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -14,14 +15,69 @@ from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 from .pagination import PageNumberLimitPagination
 from .filters import RecipeFilterSet, IngredientSearchFilter
 from .serializers import (IngredientSerializer, TagSerializer,
-                          RecipeSerializer)
-from users.serializers import MiniRecipeSerializer
+                          RecipeSerializer, UserSerializer, FollowSerializer,
+                          MiniRecipeSerializer)
 from recipes.models import (Recipe, Tag, Ingredient, IngredientsAmount,
                             Favorite, ShoppingCart)
+from users.models import User, Follow
+
+
+class DjangoUserViewSet(UserViewSet):
+    """Вьюсет юзера. Возможность подписываться и отписываться от других
+    юзеров, просмотреть список подписок."""
+
+    pagination_class = PageNumberLimitPagination
+    serializer_class = UserSerializer
+    add_serializer = FollowSerializer
+    queryset = User.objects.all()
+
+    def get_object(self):
+        return get_object_or_404(User, pk=self.kwargs.get('id'))
+
+    @action(detail=True,
+            methods=['post', 'delete'],
+            permission_classes=(IsAuthenticated,))
+    def subscribe(self, request, id=None):
+        user = request.user
+        author = get_object_or_404(User, pk=id)
+
+        if request.method == 'DELETE':
+            subscription = get_object_or_404(Follow, user=user,
+                                             author=author)
+            subscription.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        if user == author:
+            return Response({
+                'errors': 'Вы не можете подписываться на самого себя'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        if Follow.objects.filter(user=user, author=author).exists():
+            return Response({
+                'errors': 'Вы уже подписаны на данного пользователя'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        Follow.objects.create(user=user, author=author)
+        queryset = User.objects.filter(following__user=user)
+        pages = self.paginate_queryset(queryset)
+        serializer = FollowSerializer(pages,
+                                      many=True,
+                                      context={'request': request})
+        return Response(serializer.data,
+                        status=status.HTTP_201_CREATED)
+
+    @action(detail=False, permission_classes=(IsAuthenticated,))
+    def subscriptions(self, request):
+        queryset = User.objects.filter(following__user=self.request.user)
+        pages = self.paginate_queryset(queryset)
+        serializer = FollowSerializer(pages,
+                                      many=True,
+                                      context={'request': request})
+        return self.get_paginated_response(serializer.data)
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
     """Вьюсет для ингредиентов, добавлять ингредиенты может только админ."""
+
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (IsAdminOrReadOnly,)
@@ -31,17 +87,17 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 
 class TagViewSet(ReadOnlyModelViewSet):
     """Вьюсет для тэгов, добавлять тэги может только админ."""
+
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (IsAdminOrReadOnly,)
 
 
-# class FavoritesViewSet()
-
 class RecipeViewSet(ModelViewSet):
     """Вьюсет для рецептов. Создание, удаление и обновление рецепта.
     Возможность добавлять рецепты в избранное и в список покупок.
     Возможность скачать список покупок в формате txt."""
+
     queryset = Recipe.objects.select_related('author')
     serializer_class = RecipeSerializer
     permission_classes = (IsAuthorOrReadOnly,)
@@ -93,6 +149,7 @@ class RecipeViewSet(ModelViewSet):
             return Response({'errors': 'Корзина пуста'},
                             status=status.HTTP_400_BAD_REQUEST)
         download_list = 'Список покупок:/n'
+        current_date = datetime.today()
         ingredients = IngredientsAmount.objects.filter(
             recipe__shopping_cart__user=request.user
         ).order_by(
@@ -100,11 +157,10 @@ class RecipeViewSet(ModelViewSet):
         ).values(
             'ingredient__name', 'ingredient__measurement_unit'
         ).annotate(amount=Sum('amount'))
-        current_date = datetime.today()
 
         for num, ingredient in enumerate(ingredients):
             download_list += (
-                f'\n{num+1}. {ingredient["ingredient__name"]} - '
+                f'\n{num + 1}. {ingredient["ingredient__name"]} - '
                 f'{ingredient["amount"]} '
                 f'{ingredient["ingredient__measurement_unit"]}'
             )
@@ -112,7 +168,8 @@ class RecipeViewSet(ModelViewSet):
                          f'Создано на сайте foodgram.catiska.ru ' \
                          f'пользователем {request.user.get_full_name()}'
         filename = f'{request.user.username}_download_list.txt'
-        response = HttpResponse(download_list, content_type='text/plain')
+        response = HttpResponse(download_list,
+                                content_type='text.txt; charset=utf-8')
         response['Content-Disposition'] = f'attachment; filename={filename}'
 
         return response
