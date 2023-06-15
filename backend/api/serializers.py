@@ -6,8 +6,8 @@ from rest_framework.validators import UniqueTogetherValidator
 from .validators import (validate_ingredients, validate_tags,
                          validate_cooking_time)
 
-from recipes.models import Recipe, Tag, Ingredient, Favorite, IngredientsAmount
-from users.models import User, Follow
+from recipes.models import Recipe, Tag, Ingredient, IngredientsAmount
+from users.models import User
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
