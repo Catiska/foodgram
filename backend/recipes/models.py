@@ -115,11 +115,11 @@ class Favorite(models.Model):
     recipe = models.ForeignKey(Recipe,
                                on_delete=models.CASCADE,
                                verbose_name='Рецепт',
-                               related_name='favorite')
+                               related_name='favorites')
     user = models.ForeignKey(User,
                              on_delete=models.CASCADE,
                              verbose_name='Юзер',
-                             related_name='favorite')
+                             related_name='favorites')
 
     class Meta:
         ordering = ['-id']

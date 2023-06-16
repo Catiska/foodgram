@@ -33,7 +33,7 @@ class RecipeAdmin(admin.ModelAdmin):
     exclude = ('ingredient',)
 
     def in_favorites(self, obj):
-        return obj.favorite.count()
+        return obj.favorites.count()
 
     in_favorites.short_description = 'В избранном'
 
