@@ -35,6 +35,7 @@ services:
   nginx:
     container_name: foodgram_gateway
     image: nginx:1.23.3-alpine
+#    build: ./infra/
     ports:
       - 8080:80
     volumes:
