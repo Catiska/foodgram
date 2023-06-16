@@ -10,20 +10,20 @@ services:
     image: postgres:13.0-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    env_file: ../backend/.env
+    env_file: ./.env
 
   backend:
     image: catiska/foodgram_backend:latest
     volumes:
       - static:/backend_static
       - media:/app/media/recipes
-    env_file: ../backend/.env
+    env_file: ./.env
     depends_on:
       - db
 
   frontend:
     image: catiska/foodgram_frontend:latest
-    env_file: ../backend/.env
+    env_file: ./.env
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - ../frontend/:/app/result_build/
