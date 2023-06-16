@@ -37,11 +37,6 @@
 
 
 
-## Документация апи
-
-[ReDoc](https://foodgram.catiska.ru/api/docs/redoc.html)
-
-
 ## Создание суперюзера
 
 Для работы на сайте понадобится администратор, который создаст необходимые тэги, без них публикация рецепта невозможна. На сервере введите команду и создайте суперюзера:
@@ -50,3 +45,8 @@
   sudo docker compose -f docker-compose.production.yml exec backend python manage.py createsuperuser
 ```
     
+## Готовый юзер-админ
+```bash
+  admin@admin.ru
+  admin
+```
