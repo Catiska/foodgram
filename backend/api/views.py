@@ -148,7 +148,7 @@ class RecipeViewSet(ModelViewSet):
         if not request.user.shopping_cart.exists():
             return Response({'errors': 'Корзина пуста'},
                             status=status.HTTP_400_BAD_REQUEST)
-        download_list = 'Список покупок:/n'
+        download_list = 'Список покупок:\n'
         current_date = datetime.today()
         ingredients = IngredientsAmount.objects.filter(
             recipe__shopping_cart__user=request.user
