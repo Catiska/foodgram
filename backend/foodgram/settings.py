@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_KEY', 'secret_key')
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'foodram.catiska.ru']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'foodgram.catiska.ru']
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost']
 
