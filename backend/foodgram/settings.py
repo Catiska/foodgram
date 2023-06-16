@@ -3,10 +3,10 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'secret_key')
+SECRET_KEY = os.environ.get('DJANGO_KEY', 'secret_key')
 DEBUG = False
 
-ALLOWED_HOSTS = ['*', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'foodram.catiska.ru']
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost']
 
@@ -102,10 +102,10 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'collected_static'
+STATIC_URL = '/static_backend/'
+STATIC_ROOT = BASE_DIR / 'collect_static'
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
