@@ -8,7 +8,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'foodgram.catiska.ru']
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost']
+CSRF_TRUSTED_ORIGINS = ['http://localhost', 'https://foodgram.catiska.ru']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
