@@ -34,7 +34,6 @@ services:
 
   nginx:
     image: catiska/foodgram_gateway:latest
-    restart: always
     ports:
       - 8080:80
     volumes:
