@@ -33,7 +33,8 @@ services:
       - db
 
   nginx:
-    image: catiska/foodgram_gateway:latest
+    container_name: catiska/foodgram_gateway:latest
+    image: nginx:1.23.3-alpine
     ports:
       - 8080:80
     volumes:
