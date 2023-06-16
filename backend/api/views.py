@@ -4,7 +4,7 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from djoser.views import UserViewSet
+from djoser.views import UserViewSet as Djoserviewset
 from recipes.models import (Favorite, Ingredient, IngredientsAmount, Recipe,
                             ShoppingCart, Tag)
 from rest_framework import status
@@ -22,7 +22,7 @@ from .serializers import (FollowSerializer, IngredientSerializer,
                           TagSerializer, UserSerializer)
 
 
-class DjangoUserViewSet(UserViewSet):
+class UserViewSet(Djoserviewset):
     """Вьюсет юзера. Возможность подписываться и отписываться от других
     юзеров, просмотреть список подписок."""
 
