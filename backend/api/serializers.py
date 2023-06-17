@@ -1,4 +1,4 @@
-# from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import Ingredient, IngredientsAmount, Recipe, Tag
@@ -160,11 +160,9 @@ class RecipeSerializer(serializers.ModelSerializer):
         return user.shopping_cart.filter(recipe=recipe).exists()
 
     def validate(self, data):
-        tags = self.validate_tags(self.initial_data.get('tags'))
-        ingredients = self.validate_ingredients(
-            self.initial_data.get('ingredients'))
-        cooking_time = self.validate_cooking_time(
-            self.initial_data.get('cooking_time'))
+        tags = self.initial_data.get('tags')
+        ingredients = self.initial_data.get('ingredients')
+        cooking_time = self.initial_data.get('cooking_time')
 
         data.update({
             'tags': tags,
@@ -175,18 +173,18 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def validate_ingredients(self, ingredients):
         if not ingredients:
-            raise exceptions.ValidationError({
+            raise ValidationError({
                 'ingredients': 'Из воздуха каши не сваришь, добавьте '
                                'ингредиенты'})
         valid_ingredients = []
         for item in ingredients:
             ingredient = get_object_or_404(Ingredient, id=item['id'])
             if ingredient in valid_ingredients:
-                raise exceptions.ValidationError({
+                raise ValidationError({
                     'ingredients': 'Ингредиенты не должны дублироваться'})
             valid_ingredients.append(ingredient)
             if int(item['amount']) < 1:
-                raise exceptions.ValidationError({
+                raise ValidationError({
                     'ingredients': 'Добавьте корректное количество '
                                    'ингредиента, значение должно быть больше 0'
                 })
@@ -213,7 +211,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def validate_cooking_time(self, cooking_time):
         if int(cooking_time) < 1:
-            raise exceptions.ValidationError({
+            raise ValidationError({
                 'cooking_time': 'Введите корректное время готовки, оно должно '
                                 'быть больше 1'
             })
