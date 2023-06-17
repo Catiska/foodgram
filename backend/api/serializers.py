@@ -162,7 +162,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     def validate(self, data):
         tags = self.validate_tags(self.initial_data.get('tags'))
         ingredients = self.validate_ingredients(
-            self.initial_data.get('ingredients'))
+            self.initial_data.get('ingredients'), Ingredient)
         cooking_time = self.validate_cooking_time(
             self.initial_data.get('cooking_time'))
 
@@ -173,7 +173,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             'author': self.context.get('request').user})
         return data
 
-    def validate_ingredients(self, ingredients):
+    def validate_ingredients(self, ingredients, model):
         valid_ingredients = {}
         for ingredient in ingredients:
             if not (isinstance(ingredient['amount'], int
@@ -186,6 +186,12 @@ class RecipeSerializer(serializers.ModelSerializer):
             valid_ingredients[ingredient['id']] = amount
         if not valid_ingredients:
             raise ValidationError('Wrong ings')
+        db_ingredients = Ingredient.objects.filter(
+            pk__in=valid_ingredients.keys())
+        if not db_ingredients:
+            raise ValidationError('No such ings')
+        for ing in db_ingredients:
+            valid_ingredients[ing.pk] = (ing, valid_ingredients[ing.pk])
         return valid_ingredients
         # if not ingredients:
         #     raise ValidationError({
