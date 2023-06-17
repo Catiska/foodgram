@@ -6,6 +6,8 @@ from rest_framework import serializers, validators, exceptions
 from rest_framework.fields import SerializerMethodField
 from rest_framework.validators import UniqueTogetherValidator
 from users.models import User
+
+
 #
 # from .validators import (validate_cooking_time, validate_ingredients,
 #                          validate_tags)
@@ -177,7 +179,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         valid_ingredients = {}
         for ingredient in ingredients:
             if not (isinstance(ingredient['amount'], int)
-                               or ingredient['amount'].isdigit()):
+                    or ingredient['amount'].isdigit()):
                 raise ValidationError('Must be int')
             amount = (valid_ingredients.get(ingredient['id'], 0)
                       + int(ingredient['amount']))
