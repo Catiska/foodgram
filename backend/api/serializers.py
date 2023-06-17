@@ -176,8 +176,8 @@ class RecipeSerializer(serializers.ModelSerializer):
     def validate_ingredients(self, ingredients, model):
         valid_ingredients = {}
         for ingredient in ingredients:
-            if not (isinstance(ingredient['amount'], int
-                               or ingredient['amount'].isdigit())):
+            if not (isinstance(ingredient['amount'], int)
+                               or ingredient['amount'].isdigit()):
                 raise ValidationError('Must be int')
             amount = (valid_ingredients.get(ingredient['id'], 0)
                       + int(ingredient['amount']))
