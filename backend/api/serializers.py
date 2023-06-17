@@ -1,4 +1,4 @@
-from django.core.exceptions import ValidationError
+# from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import Ingredient, IngredientsAmount, Recipe, Tag
@@ -175,18 +175,18 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def validate_ingredients(self, ingredients):
         if not ingredients:
-            raise ValidationError({
+            raise serializers.ValidationError({
                 'ingredients': 'Из воздуха каши не сваришь, добавьте '
                                'ингредиенты'})
         valid_ingredients = []
         for item in ingredients:
             ingredient = get_object_or_404(Ingredient, id=item['id'])
             if ingredient in valid_ingredients:
-                raise ValidationError({
+                raise serializers.ValidationError({
                     'ingredients': 'Ингредиенты не должны дублироваться'})
             valid_ingredients.append(ingredient)
             if int(item['amount']) < 1:
-                raise ValidationError({
+                raise serializers.ValidationError({
                     'ingredients': 'Добавьте корректное количество '
                                    'ингредиента, значение должно быть больше 0'
                 })
@@ -194,18 +194,18 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def validate_tags(self, tags):
         if not tags:
-            raise ValidationError({
+            raise serializers.ValidationError({
                 'tags': 'Нужно выбрать хотя бы оин тэг'
             })
         valid_tags = []
         for tag in tags:
             if not Tag.objects.filter(id__in=tags).exists():
-                raise ValidationError({
+                raise serializers.ValidationError({
                     'tags': 'Такой тэг пока не добавили, '
                             'обратитесь к админу :)'
                 })
             if tag in valid_tags:
-                raise ValidationError({
+                raise serializers.ValidationError({
                     'tags': 'Вы уже добавили этот тэг, проверьте :)'
                 })
             valid_tags.append(tag)
@@ -213,7 +213,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def validate_cooking_time(self, cooking_time):
         if int(cooking_time) < 1:
-            raise ValidationError({
+            raise serializers.ValidationError({
                 'cooking_time': 'Введите корректное время готовки, оно должно '
                                 'быть больше 1'
             })
