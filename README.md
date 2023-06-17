@@ -1,6 +1,13 @@
 
 # [Foodgram](foodgram.catiska.ru)
 
+## Готовый юзер-админ
+```bash
+  admin@admin.ru
+  admin
+```
+
+
 ![ci/cd_foodgram workflow](https://github.com/catiska/foodgram-project-react/actions/workflows/main.yml/badge.svg?event=push)
 
 Продуктовый помощник - сайт, на котором пользователи могут публиковать рецепты, добавлять чужие рецепты в избранное и подписываться на публикации других авторов. Сервис «Список покупок» позволяет пользователям создавать список продуктов, которые нужно купить для приготовления выбранных блюд. 
@@ -49,3 +56,8 @@
   admin@admin.ru
   admin
 ```
+
+  
+## Автор проекта
+
+- [Екатерина Мындреско](https://github.com/Catiska)
