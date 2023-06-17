@@ -94,7 +94,7 @@ REST_FRAMEWORK = {
     ['rest_framework.permissions.IsAuthenticatedOrReadOnly', ],
 }
 
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
