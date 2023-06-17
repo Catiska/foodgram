@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from django.shortcuts import get_object_or_404
+# from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import Ingredient, IngredientsAmount, Recipe, Tag
 from rest_framework import serializers, validators, exceptions
@@ -174,25 +174,38 @@ class RecipeSerializer(serializers.ModelSerializer):
         return data
 
     def validate_ingredients(self, ingredients):
-        if not ingredients:
-            raise ValidationError({
-                'ingredients': 'Из воздуха каши не сваришь, добавьте '
-                               'ингредиенты'})
-        valid_ingredients = []
-        for item in ingredients:
-            ingredient = get_object_or_404(Ingredient, id=item['id'])
-            if int(item['amount']) < 1:
-                raise ValidationError({
-                    'ingredients': 'Добавьте корректное количество '
-                                   'ингредиента, значение должно '
-                                   'быть больше 0'
-                })
-            if ingredient in valid_ingredients:
-                raise ValidationError({
-                    'ingredients': 'Ингредиенты не должны дублироваться'})
-            valid_ingredients.append(ingredient)
-
-        return ingredients
+        valid_ingredients = {}
+        for ingredient in ingredients:
+            if not (isinstance(ingredient['amount'], int
+                               or ingredient['amount'].isdigit())):
+                raise ValidationError('Must be int')
+            amount = (valid_ingredients.get(ingredient['id'], 0)
+                      + int(ingredient['amount']))
+            if amount <= 0:
+                raise ValidationError('Must be > 0')
+            valid_ingredients[ingredient['id']] = amount
+        if not valid_ingredients:
+            raise ValidationError('Wrong ings')
+        return valid_ingredients
+        # if not ingredients:
+        #     raise ValidationError({
+        #         'ingredients': 'Из воздуха каши не сваришь, добавьте '
+        #                        'ингредиенты'})
+        # valid_ingredients = []
+        # for item in ingredients:
+        #     ingredient = get_object_or_404(Ingredient, id=item['id'])
+        #     if int(item['amount']) < 1:
+        #         raise ValidationError({
+        #             'ingredients': 'Добавьте корректное количество '
+        #                            'ингредиента, значение должно '
+        #                            'быть больше 0'
+        #         })
+        #     if ingredient in valid_ingredients:
+        #         raise ValidationError({
+        #             'ingredients': 'Ингредиенты не должны дублироваться'})
+        #     valid_ingredients.append(ingredient)
+        #
+        # return ingredients
 
     def validate_tags(self, tags):
         if not tags:
