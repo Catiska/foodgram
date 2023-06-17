@@ -6,7 +6,8 @@
 # def validate_ingredients(ingredients):
 #     if not ingredients:
 #         raise ValidationError({
-#             'ingredients': 'Из воздуха каши не сваришь, добавьте ингредиенты'})
+#             'ingredients': 'Из воздуха каши не сваришь,
+#             добавьте ингредиенты'})
 #     valid_ingredients = []
 #     for item in ingredients:
 #         ingredient = get_object_or_404(Ingredient, id=item['id'])

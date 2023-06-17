@@ -201,7 +201,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         for tag in tags:
             if not Tag.objects.filter(id__in=tags).exists():
                 raise ValidationError({
-                    'tags': 'Такой тэг пока не добавили, обратитесь к админу :)'
+                    'tags': 'Такой тэг пока не добавили, '
+                            'обратитесь к админу :)'
                 })
             if tag in valid_tags:
                 raise ValidationError({
