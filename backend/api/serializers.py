@@ -160,56 +160,39 @@ class RecipeSerializer(serializers.ModelSerializer):
         return user.shopping_cart.filter(recipe=recipe).exists()
 
     def validate(self, data):
-        ingredients = self.initial_data.get('ingredients')
-        if not ingredients:
-            raise serializers.ValidationError({
-                'ingredients': 'Нужен хоть один ингридиент для рецепта'})
-        ingredient_list = []
-        for ingredient_item in ingredients:
-            ingredient = get_object_or_404(Ingredient,
-                                           id=ingredient_item['id'])
-            if ingredient in ingredient_list:
-                raise serializers.ValidationError('Ингридиенты должны '
-                                                  'быть уникальными')
-            ingredient_list.append(ingredient)
-            if int(ingredient_item['amount']) < 0:
-                raise serializers.ValidationError({
-                    'ingredients': ('Убедитесь, что значение количества '
-                                    'ингредиента больше 0')
-                })
-        data['ingredients'] = ingredients
-        return data
-        # tags = self.initial_data.get('tags')
-        # ingredients = self.initial_data.get('ingredients')
-        # cooking_time = self.initial_data.get('cooking_time')
-        #
-        # data.update({
-        #     'tags': tags,
-        #     'ingredients': ingredients,
-        #     'cooking_time': cooking_time,
-        #     'author': self.context.get('request').user})
-        # return data
+        tags = self.validate_tags(self.initial_data.get('tags'))
+        ingredients = self.validate_ingredients(
+            self.initial_data.get('ingredients'))
+        cooking_time = self.validate_cooking_time(
+            self.initial_data.get('cooking_time'))
 
-    # def validate_ingredients(self, ingredients):
-    #     if not ingredients:
-    #         raise ValidationError({
-    #             'ingredients': 'Из воздуха каши не сваришь, добавьте '
-    #                            'ингредиенты'})
-    #     valid_ingredients = []
-    #     for item in ingredients:
-    #         ingredient = get_object_or_404(Ingredient, id=item['id'])
-    #         if int(item['amount']) < 1:
-    #             raise ValidationError({
-    #                 'ingredients': 'Добавьте корректное количество '
-    #                                'ингредиента, значение должно
-    #                                быть больше 0'
-    #             })
-    #         if ingredient in valid_ingredients:
-    #             raise ValidationError({
-    #                 'ingredients': 'Ингредиенты не должны дублироваться'})
-    #         valid_ingredients.append(ingredient)
-    #
-    #     return ingredients
+        data.update({
+            'tags': tags,
+            'ingredients': ingredients,
+            'cooking_time': cooking_time,
+            'author': self.context.get('request').user})
+        return data
+
+    def validate_ingredients(self, ingredients):
+        if not ingredients:
+            raise ValidationError({
+                'ingredients': 'Из воздуха каши не сваришь, добавьте '
+                               'ингредиенты'})
+        valid_ingredients = []
+        for item in ingredients:
+            ingredient = get_object_or_404(Ingredient, id=item['id'])
+            if int(item['amount']) < 1:
+                raise ValidationError({
+                    'ingredients': 'Добавьте корректное количество '
+                                   'ингредиента, значение должно '
+                                   'быть больше 0'
+                })
+            if ingredient in valid_ingredients:
+                raise ValidationError({
+                    'ingredients': 'Ингредиенты не должны дублироваться'})
+            valid_ingredients.append(ingredient)
+
+        return ingredients
 
     def validate_tags(self, tags):
         if not tags:
