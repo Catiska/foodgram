@@ -159,19 +159,19 @@ class RecipeSerializer(serializers.ModelSerializer):
             return False
         return user.shopping_cart.filter(recipe=recipe).exists()
 
-    # def validate(self, data):
-    #     tags = validate_tags(self.initial_data.get('tags'))
-    #     ingredients = validate_ingredients(
-    #         self.initial_data.get('ingredients'))
-    #     cooking_time = validate_cooking_time(
-    #         self.initial_data.get('cooking_time'))
-    #
-    #     data.update({
-    #         'tags': tags,
-    #         'ingredients': ingredients,
-    #         'cooking_time': cooking_time,
-    #         'author': self.context.get('request').user})
-    #     return data
+    def validate(self, data):
+        tags = self.validate_tags(self.initial_data.get('tags'))
+        ingredients = self.validate_ingredients(
+            self.initial_data.get('ingredients'))
+        cooking_time = self.validate_cooking_time(
+            self.initial_data.get('cooking_time'))
+
+        data.update({
+            'tags': tags,
+            'ingredients': ingredients,
+            'cooking_time': cooking_time,
+            'author': self.context.get('request').user})
+        return data
 
     def validate_ingredients(self, ingredients):
         if not ingredients:
@@ -221,14 +221,20 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def create_ingredients_amount(ingredients, recipe):
-        ingredients_list = []
-        for ingredient_data in ingredients:
-            ingredient = Ingredient.objects.get(id=ingredient_data['id'])
-            ingredients_list.append(
-                IngredientsAmount(ingredient=ingredient,
-                                  amount=ingredient_data.pop('amount'),
-                                  recipe=recipe))
-        recipe.recipes_ingredients.bulk_create(ingredients_list)
+        for ingredient in ingredients:
+            IngredientsAmount.objects.create(
+                recipe=recipe,
+                ingredient_id=ingredient.get('id'),
+                amount=ingredient.get('amount'),
+            )
+        # ingredients_list = []
+        # for ingredient_data in ingredients:
+        #     ingredient = Ingredient.objects.get(id=ingredient_data['id'])
+        #     ingredients_list.append(
+        #         IngredientsAmount(ingredient=ingredient,
+        #                           amount=ingredient_data.pop('amount'),
+        #                           recipe=recipe))
+        # recipe.recipes_ingredients.bulk_create(ingredients_list)
 
     def create(self, validated_data) -> Recipe:
         ingredients = validated_data.pop('ingredients')
