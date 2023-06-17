@@ -201,7 +201,8 @@ class RecipeSerializer(serializers.ModelSerializer):
     #         if int(item['amount']) < 1:
     #             raise ValidationError({
     #                 'ingredients': 'Добавьте корректное количество '
-    #                                'ингредиента, значение должно быть больше 0'
+    #                                'ингредиента, значение должно
+    #                                быть больше 0'
     #             })
     #         if ingredient in valid_ingredients:
     #             raise ValidationError({
