@@ -180,25 +180,37 @@ class RecipeSerializer(serializers.ModelSerializer):
         for ingredient in ingredients:
             if not (isinstance(ingredient['amount'], int)
                     or ingredient['amount'].isdigit()):
-                raise ValidationError('Must be int')
+                raise ValidationError({
+                    'ingredients': 'Добавьте корректное количество '
+                                   'ингредиента, значением должно '
+                                   'быть число больше 0'
+                })
             amount = (valid_ingredients.get(ingredient['id'], 0)
                       + int(ingredient['amount']))
             if amount <= 0:
-                raise ValidationError('Must be > 0')
+                raise ValidationError({
+                    'ingredients': 'Добавьте корректное количество '
+                                   'ингредиента, значение должно '
+                                   'быть больше 0'
+                })
             valid_ingredients[ingredient['id']] = amount
         if not valid_ingredients:
-            raise ValidationError('Wrong ings')
+            raise ValidationError({
+                'ingredients': 'Из воздуха каши не сваришь, добавьте '
+                               'корректные ингредиенты'
+            })
         db_ingredients = Ingredient.objects.filter(
             pk__in=valid_ingredients.keys())
         if not db_ingredients:
-            raise ValidationError('No such ings')
+            raise ValidationError({
+                'ingredients': 'Проверьте список ингредиентов, в базе нет '
+                               'перечисленных ингредиентов'
+            })
         for ing in db_ingredients:
             valid_ingredients[ing.pk] = (ing, valid_ingredients[ing.pk])
         return valid_ingredients
-        # if not ingredients:
-        #     raise ValidationError({
-        #         'ingredients': 'Из воздуха каши не сваришь, добавьте '
-        #                        'ингредиенты'})
+
+
         # valid_ingredients = []
         # for item in ingredients:
         #     ingredient = get_object_or_404(Ingredient, id=item['id'])
@@ -212,7 +224,10 @@ class RecipeSerializer(serializers.ModelSerializer):
         #         raise ValidationError({
         #             'ingredients': 'Ингредиенты не должны дублироваться'})
         #     valid_ingredients.append(ingredient)
-        #
+        # if not valid_ingredients:
+        #     raise ValidationError({
+        #         'ingredients': 'Из воздуха каши не сваришь, добавьте '
+        #                        'ингредиенты'})
         # return ingredients
 
     def validate_tags(self, tags):
@@ -253,7 +268,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                 amount=amount
             ))
 
-        IngredientsAmount.objects.bulk_create(ingredients_amount)
+        recipe.recipes_ingredients.bulk_create(ingredients_amount)
 
         # for ingredient in ingredients:
         #     IngredientsAmount.objects.create(
