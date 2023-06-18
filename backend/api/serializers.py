@@ -210,7 +210,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             valid_ingredients[ing.pk] = (ing, valid_ingredients[ing.pk])
         return valid_ingredients
 
-
         # valid_ingredients = []
         # for item in ingredients:
         #     ingredient = get_object_or_404(Ingredient, id=item['id'])
@@ -250,7 +249,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         return tags
 
     def validate_cooking_time(self, cooking_time):
-        if int(cooking_time) < 1:
+        cooking_time = int(cooking_time)
+        if cooking_time < 1:
             raise ValidationError({
                 'cooking_time': 'Введите корректное время готовки, оно должно '
                                 'быть больше 1'
