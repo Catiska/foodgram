@@ -8,11 +8,11 @@ from .models import Follow, User
 class UserAdmin(UserAdmin):
     list_display = ('id', 'username', 'email', 'first_name', 'last_name')
     list_filter = ('username', 'email')
-    search_fields = ('username', 'email')
+    search_fields = ('username',)
 
 
 @admin.register(Follow)
 class FollowAdmin(admin.ModelAdmin):
     list_display = ('author', 'user')
     list_filter = ('author', 'user')
-    search_fields = ('author', 'user')
+    search_fields = ('author',)

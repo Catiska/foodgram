@@ -31,7 +31,7 @@ class RecipeAdmin(admin.ModelAdmin):
     readonly_fields = ('in_favorites',)
     list_filter = ('name', 'author', 'tags', 'cooking_time')
     empty_value_display = '-'
-    search_fields = ('name', 'author', 'in_favorites')
+    search_fields = ('name',)
     inlines = [IngredientInline, ]
     exclude = ('ingredient',)
 
@@ -45,7 +45,7 @@ class RecipeAdmin(admin.ModelAdmin):
 class IngredientsAmountAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'ingredient', 'amount')
     list_filter = ('recipe',)
-    search_fields = ('recipe', 'ingredient')
+    search_fields = ('recipe',)
     empty_value_display = '-'
 
 
@@ -53,7 +53,7 @@ class IngredientsAmountAdmin(admin.ModelAdmin):
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'user')
     list_filter = ('recipe', 'user')
-    search_fields = ('recipe', 'user')
+    search_fields = ('recipe',)
     empty_value_display = '-'
 
 
@@ -61,5 +61,5 @@ class FavoriteAdmin(admin.ModelAdmin):
 class ShoppingCartAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'user')
     list_filter = ('recipe', 'user')
-    search_fields = ('recipe', 'user')
+    search_fields = ('recipe',)
     empty_value_display = '-'

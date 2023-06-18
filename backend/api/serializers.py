@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import Ingredient, IngredientsAmount, Recipe, Tag
 from rest_framework import serializers, validators, exceptions
@@ -111,6 +112,9 @@ class IngredientsAmountSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='ingredient.name')
     measurement_unit = serializers.ReadOnlyField(
         source='ingredient.measurement_unit')
+    amount = serializers.IntegerField(
+        validators=(MinValueValidator(1, 'Количество должно быть больше 0'),)
+    )
 
     class Meta:
         model = IngredientsAmount
@@ -129,6 +133,9 @@ class RecipeSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     tags = TagSerializer(many=True, read_only=True)
     image = Base64ImageField()
+    cooking_time = serializers.IntegerField(
+        validators=(MinValueValidator(
+            1, 'Время приготовления должно быть больше 0'),))
     ingredients = SerializerMethodField()
     is_favorited = SerializerMethodField(read_only=True)
     is_in_shopping_cart = SerializerMethodField(read_only=True)
