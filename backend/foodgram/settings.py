@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('DJANGO_KEY', 'secret_key')
 # DEBUG = os.environ.get('DEBUG', 'False')
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'foodgram.catiska.ru']
 
@@ -95,7 +95,7 @@ REST_FRAMEWORK = {
     ['rest_framework.permissions.IsAuthenticatedOrReadOnly', ],
 }
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
