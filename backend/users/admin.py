@@ -15,4 +15,3 @@ class UserAdmin(UserAdmin):
 class FollowAdmin(admin.ModelAdmin):
     list_display = ('author', 'user')
     list_filter = ('author', 'user')
-    search_fields = ('author',)
