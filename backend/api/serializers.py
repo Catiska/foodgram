@@ -244,16 +244,16 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def create_ingredients_amount(ingredients, recipe):
-        # ingredients_amount = []
-        #
-        # for ingredient, amount in ingredients.values():
-        #     ingredients_amount.append(IngredientsAmount(
-        #         recipe=recipe,
-        #         ingredients=ingredient,
-        #         amount=amount
-        #     ))
-        #
-        # IngredientsAmount.objects.bulk_create(ingredients_amount)
+        ingredients_amount = []
+
+        for ingredient, amount in ingredients.values():
+            ingredients_amount.append(IngredientsAmount(
+                recipe=recipe,
+                ingredient=ingredient,
+                amount=amount
+            ))
+
+        IngredientsAmount.objects.bulk_create(ingredients_amount)
 
         # for ingredient in ingredients:
         #     IngredientsAmount.objects.create(
@@ -261,14 +261,14 @@ class RecipeSerializer(serializers.ModelSerializer):
         #         ingredient_id=ingredient.get('id'),
         #         amount=ingredient.get('amount'),
         #     )
-        ingredients_list = []
-        for ingredient_data in ingredients:
-            ingredient = Ingredient.objects.get(id=ingredient_data['id'])
-            ingredients_list.append(
-                IngredientsAmount(ingredient=ingredient,
-                                  amount=ingredient_data.pop('amount'),
-                                  recipe=recipe))
-        recipe.recipes_ingredients.bulk_create(ingredients_list)
+        # ingredients_list = []
+        # for ingredient_data in ingredients:
+        #     ingredient = Ingredient.objects.get(id=ingredient_data['id'])
+        #     ingredients_list.append(
+        #         IngredientsAmount(ingredient=ingredient,
+        #                           amount=ingredient_data.pop('amount'),
+        #                           recipe=recipe))
+        # recipe.recipes_ingredients.bulk_create(ingredients_list)
 
     def create(self, validated_data) -> Recipe:
         ingredients = validated_data.pop('ingredients')
