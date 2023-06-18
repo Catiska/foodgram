@@ -180,32 +180,37 @@ class RecipeSerializer(serializers.ModelSerializer):
         for ingredient in ingredients:
             if not (isinstance(ingredient['amount'], int)
                     or ingredient['amount'].isdigit()):
-                raise ValidationError({
-                    'ingredients': 'Добавьте корректное количество '
-                                   'ингредиента, значением должно '
-                                   'быть число больше 0'
-                })
+                raise ValidationError('Введите количество ингредиентов числом')
+                # {
+                #     'ingredients': 'Добавьте корректное количество '
+                #                    'ингредиента, значением должно '
+                #                    'быть число больше 0'
+                # })
             amount = (valid_ingredients.get(ingredient['id'], 0)
                       + int(ingredient['amount']))
             if amount <= 0:
-                raise ValidationError({
-                    'ingredients': 'Добавьте корректное количество '
-                                   'ингредиента, значение должно '
-                                   'быть больше 0'
-                })
+                raise ValidationError('Количество ингредиента должно быть '
+                                      'больше 0')
+                #     {
+                #     'ingredients': 'Добавьте корректное количество '
+                #                    'ингредиента, значение должно '
+                #                    'быть больше 0'
+                # })
             valid_ingredients[ingredient['id']] = amount
         if not valid_ingredients:
-            raise ValidationError({
-                'ingredients': 'Из воздуха каши не сваришь, добавьте '
-                               'корректные ингредиенты'
-            })
+            raise ValidationError('Добавьте корректные ингрдеиенты')
+            #     {
+            #     'ingredients': 'Из воздуха каши не сваришь, добавьте '
+            #                    'корректные ингредиенты'
+            # })
         db_ingredients = Ingredient.objects.filter(
             pk__in=valid_ingredients.keys())
         if not db_ingredients:
-            raise ValidationError({
-                'ingredients': 'Проверьте список ингредиентов, в базе нет '
-                               'перечисленных ингредиентов'
-            })
+            raise ValidationError('No such ingredients in db')
+            #     {
+            #     'ingredients': 'Проверьте список ингредиентов, в базе нет '
+            #                    'перечисленных ингредиентов'
+            # })
         for ing in db_ingredients:
             valid_ingredients[ing.pk] = (ing, valid_ingredients[ing.pk])
         return valid_ingredients
@@ -251,10 +256,12 @@ class RecipeSerializer(serializers.ModelSerializer):
     def validate_cooking_time(self, cooking_time):
         cooking_time = int(cooking_time)
         if cooking_time < 1:
-            raise ValidationError({
-                'cooking_time': 'Введите корректное время готовки, оно должно '
-                                'быть больше 1'
-            })
+            raise ValidationError('Время приготовления должно быть > 0')
+            # {
+            #     'cooking_time': 'Введите корректное время готовки,
+            #     оно должно '
+            #                     'быть больше 1'
+            # })
         return cooking_time
 
     @staticmethod
