@@ -1,11 +1,6 @@
 
 # [Foodgram](foodgram.catiska.ru)
 
-## Готовый юзер-админ
-```bash
-  admin@admin.ru
-  admin
-```
 
 
 ![ci/cd_foodgram workflow](https://github.com/catiska/foodgram-project-react/actions/workflows/main.yml/badge.svg?event=push)
@@ -51,11 +46,7 @@
   sudo docker compose -f docker-compose.production.yml exec backend python manage.py createsuperuser
 ```
     
-## Готовый юзер-админ
-```bash
-  admin@admin.ru
-  admin
-```
+
 
   
 ## Автор проекта
