@@ -3,7 +3,7 @@
 
 
 
-![ci/cd_foodgram workflow](https://github.com/catiska/foodgram-project-react/actions/workflows/main.yml/badge.svg?event=push)
+![ci/cd_foodgram workflow](https://github.com/catiska/foodgram/actions/workflows/main.yml/badge.svg?event=push)
 
 Продуктовый помощник - сайт, на котором пользователи могут публиковать рецепты, добавлять чужие рецепты в избранное и подписываться на публикации других авторов. Сервис «Список покупок» позволяет пользователям создавать список продуктов, которые нужно купить для приготовления выбранных блюд. 
 
@@ -24,7 +24,7 @@
 Проект запущен на пересборку после команды git push в основную ветку. Для работы над проектом склонируйте его
 
 ```bash
-  git clone https://github.com/Catiska/foodgram-project-react.git
+  git clone https://github.com/Catiska/foodgram.git
 ```
 
 Для работы на новом сервере в секретах гитхаба понадобится обновить следующие данные:
