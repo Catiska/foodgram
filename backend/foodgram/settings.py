@@ -6,10 +6,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_KEY', 'secret_key')
 # DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 DEBUG = True
+HOST_IP = os.environ.get('HOST_IP')
+HOST_IP_CSRF = os.environ.get('HOST_IP_CSRF')
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'foodgram.catiska.ru', '212.113.117.119']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'foodgram.catiska.ru', HOST_IP]
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost', 'https://foodgram.catiska.ru', 'http://212.113.117.119']
+CSRF_TRUSTED_ORIGINS = ['http://localhost', 'https://foodgram.catiska.ru', HOST_IP_CSRF]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
